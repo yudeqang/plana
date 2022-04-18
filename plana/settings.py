@@ -30,8 +30,10 @@ OTHERS_LOG_LEVAL = "ERROR"  # 第三方库的log等级
 MONGO_URI = ''
 
 SCHEDULER_CLS = 'block'
-JOB_BACKEND_DB = 'mongo'
-TASK_BACKEND_DB = 'mongo'
+# JOB_BACKEND_DB = 'mongo'
+JOB_BACKEND_DB = 'memory'
+# TASK_BACKEND_DB = 'mongo'
+TASK_BACKEND_DB = 'memory'
 
 WORK_MODULE = 'work'
 

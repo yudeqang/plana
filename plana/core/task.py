@@ -4,13 +4,12 @@
 @time: 2022/04/15
 @describe: 
 """
-import datetime
 import uuid
 
-import pytz
 
 from .schedulers import Job
 from .backend import TaskBackendDb
+from .utils import now, str_now
 
 
 class Task:
@@ -27,22 +26,20 @@ class Task:
 
     def start(self):
         self.running = True
-        self.start_time = self.now()
-        self.backend.insert_task({'job_id': self.job.id, 'job_name': self.job.name,
-                                  'task_id': self.task_id, 'start_time': self.now()})
+        self.start_time = now()
+        self.backend.insert_task(self.info())
 
     def stop(self):
         self.running = False
-        self.end_time = self.now()
+        self.end_time = now()
         self.run_time = str(self.end_time - self.start_time)  # 用字符串表示运行时间
-        self.backend.update_task({'task_id': self.task_id}, {'$set': {'end_timd': self.end_time,
-                                                                      'run_time': self.run_time,
-                                                                      'exception': str(self.exception)}})
+        self.backend.update_task(self.backend.get_task(self.task_id), self.info())
 
-    @staticmethod
-    def now() -> datetime.datetime:
-        tz = pytz.timezone('Asia/Shanghai')
-        return datetime.datetime.now(tz)
+    def info(self):
+        return {'job_id': self.job.id, 'job_name': self.job.name,
+                'task_id': self.task_id, 'start_time': self.start_time,
+                'end_time': self.end_time, 'run_time': self.run_time,
+                'exception': self.exception}
 
     def get_stats(self):
         return self.__str__()
@@ -50,7 +47,7 @@ class Task:
     def __str__(self):
         name = self.job.name
         stats = '运行中' if self.running else '运行结束'
-        return f"{name}->{stats}"
+        return f"{name}->{stats}\n{self.info()}"
 
     def set_exception(self, exception: Exception):
         self.exception = exception

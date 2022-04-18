@@ -12,10 +12,10 @@ from apscheduler.triggers.cron import CronTrigger
 
 from .log import log
 from .Exceptions import NoticeException
-from .schedulers import MySchedulerBase, SxBlockingScheduler, SxBackgroundScheduler
-from plana.settings import SCHEDULER_CLS, JOB_BACKEND_DB, TASK_BACKEND_DB
+from .schedulers import MySchedulerBase, SxBlockingScheduler, SxBackgroundScheduler, Job
+from ..settings import SCHEDULER_CLS, JOB_BACKEND_DB, TASK_BACKEND_DB
 from .task import Task
-from .backend import MongoJobBackend, MongoTaskBackend
+from .backend import MongoJobBackend, MongoTaskBackend, MemoryTaskBackend, MemoryJobBackend
 from .notice.base import Notice
 
 if SCHEDULER_CLS == 'block':
@@ -28,12 +28,16 @@ else:
 
 if JOB_BACKEND_DB == 'mongo':
     JOB_BACKEND_DB = MongoJobBackend
+elif JOB_BACKEND_DB == 'memory':
+    JOB_BACKEND_DB = MemoryJobBackend
 else:
     print('未知的Job存储')
     exit()
 
 if TASK_BACKEND_DB == 'mongo':
     TASK_BACKEND_DB = MongoTaskBackend
+elif TASK_BACKEND_DB == 'memory':
+    TASK_BACKEND_DB = MemoryTaskBackend
 else:
     print('未知的任务存储')
     exit()
