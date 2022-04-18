@@ -3,6 +3,11 @@ plana是一个非常简单的定时任务框架，内置了异常提醒和任务
 现阶段使用需要配置一个MongoDB，因为还没有前端的展示功能，待后续开发，两天前萌生了一个想法，想要做一个定时任务框架，现在我的定时任务都基于linux的Crontab来管理，
 许多小脚本存放于服务器的各个地方，想使用一种统一的方式来管理他们。开源的方案也有，看了一些任务调度框架，但是它们部署都挺麻烦，而且不一定适用，于是就有了这个项目，它是基于APScheduler开发的。
 
+## 安装
+```
+pip install git+https://github.com/yudeqang/plana.git
+```
+
 ## 快速上手
 ```python
 from plana.core import add_job, IntervalTrigger, start, NoticeException

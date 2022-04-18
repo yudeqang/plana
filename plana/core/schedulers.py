@@ -14,7 +14,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.job import Job
 from apscheduler.util import _Undefined
 
-from .backend import JobBackendDb
+from .backend import JobBackendDb, TaskBackendDb, MemoryTaskBackend, MemoryJobBackend
 
 undefined = _Undefined()
 
@@ -23,9 +23,14 @@ class MySchedulerBase(BaseScheduler, ABC):
 
     _jobs: List[Job] = []
 
-    def __init__(self, backend: JobBackendDb, *args, **kwargs):
+    _instance = None
+
+    def __init__(self, backend: JobBackendDb,
+                 task_backend: TaskBackendDb,
+                 *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.backend = backend
+        self.task_backend = task_backend
 
     def register_job(self, job):
         self._jobs.append(job)
@@ -47,6 +52,12 @@ class MySchedulerBase(BaseScheduler, ABC):
             if i.name == name:
                 return i
         raise Exception('job is not found')
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance:
+            return cls._instance
+        cls._instance = super(MySchedulerBase, cls).__new__(cls)
+        return cls._instance
 
 
 class SxBlockingScheduler(MySchedulerBase, BlockingScheduler):

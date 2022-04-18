@@ -45,7 +45,8 @@ else:
 
 def schedulerFactory() -> MySchedulerBase:
     backend = JOB_BACKEND_DB()
-    scheduler = SCHEDULER_CLS(backend, {
+    task_backend = TASK_BACKEND_DB()
+    scheduler = SCHEDULER_CLS(backend, task_backend, {
         # 'apscheduler.jobstores.default': {
         #     'type': 'redis',
         #     'host': '192.168.0.54',
@@ -64,7 +65,6 @@ def schedulerFactory() -> MySchedulerBase:
 
 
 scheduler = schedulerFactory()
-task_backend_db = TASK_BACKEND_DB()
 
 
 def add_job(trigger, name=None, notice: Optional[Notice] = None):
@@ -84,7 +84,7 @@ def add_job(trigger, name=None, notice: Optional[Notice] = None):
         @scheduler.scheduled_job(trigger, name=name)
         def inner(*args, **kwargs):
             job = scheduler.find_job(name)
-            task = Task(job, task_backend_db)
+            task = Task(job, scheduler.task_backend)
             task.start()
             log.debug(f'{job.name}->开始执行')
             try:

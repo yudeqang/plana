@@ -9,13 +9,13 @@ from plana.core.backend import MemoryJobBackend, MemoryTaskBackend, MongoTaskBac
 
 
 def test_memory():
-    sc = SxBlockingScheduler(MemoryJobBackend())
+    t = MemoryTaskBackend()
+    sc = SxBlockingScheduler(MemoryJobBackend(), t)
     job = Job(sc, name='test')
     sc.register_job(job)
     print(sc.backend.get_all_job())
     assert len(sc.backend.get_all_job()) > 0
 
-    t = MemoryTaskBackend()
     task = Task(job, t)
     # 模拟任务启动
     task.start()
@@ -30,13 +30,13 @@ def test_memory():
 
 def test_mongo():
     mb = MongoJobBackend('mongodb://192.168.0.132:27017')
-    sc = SxBlockingScheduler(mb)
+    t = MongoTaskBackend('mongodb://192.168.0.132:27017')
+    sc = SxBlockingScheduler(mb, t)
     job = Job(sc, name='test')
     sc.register_job(job)
     print(sc.backend.get_all_job())
     assert len(sc.backend.get_all_job()) > 0
 
-    t = MongoTaskBackend('mongodb://192.168.0.132:27017')
     task = Task(job, t)
     # 模拟任务启动
     task.start()
@@ -51,3 +51,11 @@ def test_mongo():
     # 清理掉测试集合
     mb.col.delete_many({})
     t.col.delete_many({})
+
+
+def test_singletons():
+    m = MemoryJobBackend()
+    t = MemoryTaskBackend()
+    s = SxBlockingScheduler(m, t)
+    s1 = SxBlockingScheduler(m, t)
+    assert s is s1
