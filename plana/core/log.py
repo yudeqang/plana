@@ -2,7 +2,7 @@
 @author: yudeqiang
 @file: log.py
 @time: 2022/04/13
-@describe: 
+@describe:
 """
 # -*- coding: utf-8 -*-
 import logging

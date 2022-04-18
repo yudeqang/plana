@@ -16,8 +16,8 @@ if version_info < (3, 6, 0):
 with open(join(dirname(__file__), "plana/core/VERSION"), "rb") as f:
     version = f.read().decode("ascii").strip()
 
-# with open("README.md", "r") as fh:
-#     long_description = fh.read()
+with open("README.md", "r", encoding='utf8') as fh:
+    long_description = fh.read()
 
 packages = setuptools.find_packages()
 
@@ -36,10 +36,10 @@ setuptools.setup(
     author_email="yudeqang@gmail.com",
     python_requires=">=3.6",
     description="plana是一个定时任务框架，包含任务运行信息，异常提醒等功能",
-    # long_description=long_description,
-    # long_description_content_type="text/markdown",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     install_requires=requires,
-    url="https://github.com/yudeqang",
+    url="https://github.com/yudeqang/plana",
     packages=packages,
     include_package_data=True,
     classifiers=["Programming Language :: Python :: 3"],
