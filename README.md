@@ -5,20 +5,32 @@ plana是一个非常简单的定时任务框架，内置了异常提醒和任务
 
 ## 快速上手
 ```python
-from plana.core import add_job, IntervalTrigger, start
-from plana.core.notice import EmailNotice
+from plana.core import add_job, IntervalTrigger, start, NoticeException
+from plana.core.notice import EmailNotice, DingDingNotice
 
 # 使用EMAIL提醒需要提供settings.py配置文件或者实例化的时候传入参数
 notice = EmailNotice()
+# 还可选择使用钉钉提醒, 需要传入一个钉钉的token或者配置文件中提供
+# notice = DingDingNotice(token)
 
 @add_job(IntervalTrigger(seconds=3), name='你好啊', notice=notice)
 def say_hello():
     """Interval 示例"""
-    print("hello world")
+    try:
+        print("hello world")
+    except:
+      raise NoticeException('定时任务异常')
 
 start()
 ```
-plana中有几个基本的对象
+以上几行代码做了如下的事情：  
+每三秒运行一次say_hello函数  
+异常时发送邮件提醒
+记录每次运行say_hello的信息
+
+plana中有几个基本的对象：  
+job 指的是一个定时任务  
+task 一个定时任务每运行一次就是一个task  
 trigger 定时器，有两种选择，间隔时间，或者linux cron 格式的定时器，示例中使用的是间隔时间，每隔3秒运行一次
 notice 提醒器，内置了两种，钉钉和邮件提醒
 使用plana添加定时任务分为如下几步
@@ -39,16 +51,16 @@ def test():
 ![](./static/emailnotice.jpg)
 
 ## 配置文件
-由于定时任务存储目前依赖于MongoDB，所有需要用户提供一个mongodb的连接
 可选的配置：
 ```python
-# Mongo连接， mongodb://root:123456@127.0.0.1:27017
+# Mongo连接，如果数据job和task需要存在mongo中请提供这个选项
+# mongodb://root:123456@127.0.0.1:27017
 MONGO_URI = ''
 
 # 如果定时任务存在某个模块下，提供模块的名字
 WORK_MODULE = 'work'
 
-# 钉钉的Token
+# 钉钉的Token，如果选择使用钉钉提醒
 DING_TOKEN = ''
 
 # 邮件设置
@@ -59,10 +71,8 @@ EMAIL_TO_USER = ''
 ```
 
 ## todo
-目前这个项目处于非常早期的版本，不足之处还有很多，后续要陆续优化 \
-后续还打算提供一个简单的前端页面来展示定时任务运行记录 \
-除了用MongoDB做任务存储以外，还要支持其他的数据库 \
-为了再降低使用成本，还要添加基于内存的存储~~ 
+目前这个项目处于早期的版本，不足之处还有很多，后续要陆续优化 \
+后续还打算提供一个简单的前端页面来展示定时任务运行记录
 
 
 ## 版本更新
