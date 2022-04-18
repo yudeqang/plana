@@ -21,13 +21,9 @@ with open("README.md", "r", encoding='utf8') as fh:
 
 packages = setuptools.find_packages()
 
-requires = [
-    "redis==4.2.2",
-    "pymongo==4.1.1",
-    "APScheduler==3.8.1",
-    "loguru==0.6.0",
-    "better-exceptions>=0.2.2",
-]
+with open('requirements.txt', 'r') as f:
+    requires = f.read().split('\n')
+
 setuptools.setup(
     name="plana",
     version=version,
