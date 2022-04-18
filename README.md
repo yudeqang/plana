@@ -10,15 +10,21 @@ pip install git+https://github.com/yudeqang/plana.git
 
 ## 快速上手
 ```python
-from plana.core import add_job, IntervalTrigger, start, NoticeException
+from plana.core import add_job, start, NoticeException
 from plana.core.notice import EmailNotice, DingDingNotice
+from plana.core import IntervalTrigger, CronTrigger
 
 # 使用EMAIL提醒需要提供settings.py配置文件或者实例化的时候传入参数
 notice = EmailNotice()
 # 还可选择使用钉钉提醒, 需要传入一个钉钉的token或者配置文件中提供
 # notice = DingDingNotice(token)
 
-@add_job(IntervalTrigger(seconds=3), name='你好啊', notice=notice)
+# crontab风格的定时器
+# trigger = CronTrigger.from_crontab('0 12 * * *')
+# 间隔时间运行的定时器
+trigger = IntervalTrigger(seconds=3)
+
+@add_job(trigger, name='你好啊', notice=notice)
 def say_hello():
     """Interval 示例"""
     try:

@@ -15,6 +15,7 @@ from apscheduler.job import Job
 from apscheduler.util import _Undefined
 
 from .backend import JobBackendDb, TaskBackendDb, MemoryTaskBackend, MemoryJobBackend
+from .log import log
 
 undefined = _Undefined()
 
@@ -33,6 +34,7 @@ class MySchedulerBase(BaseScheduler, ABC):
         self.task_backend = task_backend
 
     def register_job(self, job):
+        log.debug(f'注册Job:{job.name}')
         self._jobs.append(job)
         self.backend.register(job)
 

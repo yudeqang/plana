@@ -3,3 +3,4 @@ APScheduler==3.8.1
 loguru==0.6.0
 better-exceptions>=0.2.2
 requests>=2.27.1
+yagmail==0.15.277
