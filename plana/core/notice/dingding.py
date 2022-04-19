@@ -22,12 +22,17 @@ class DingDingNotice(Notice):
                 raise NotTokenException('钉钉token未提供')
             self.token = DING_TOKEN
 
-    def notice(self, msg):
+    def notice(self, msg, mobile: list = []):
         url = f"https://oapi.dingtalk.com/robot/send?access_token={self.token}"
+
         data = {
             "msgtype": 'text',
             "text": {
                 "content": msg
+            },
+            "at": {
+                "atMobiles": mobile,
+                "isAtAll": "false"
             }
         }
         json_data = json.dumps(data).encode(encoding='utf-8')
