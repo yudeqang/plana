@@ -12,3 +12,4 @@ EMAIL_HOST = 'smtp.qq.com'
 EMAIL_TO_USER = '1017192795@qq.com'
 
 MONGO_URI = ''
+

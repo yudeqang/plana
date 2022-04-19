@@ -86,7 +86,7 @@ def add_job(trigger, name=None, notice: Optional[Notice] = None):
             job = scheduler.find_job(name)
             task = Task(job, scheduler.task_backend)
             task.start()
-            log.debug(f'{job.name}->开始执行')
+            log.info(f'{job.name}->开始执行')
             try:
                 func(*args, **kwargs)
             except NoticeException as e:
@@ -97,7 +97,7 @@ def add_job(trigger, name=None, notice: Optional[Notice] = None):
                 log.error(f'{name}->执行异常:{str(e)}')
             finally:
                 task.stop()
-            log.debug(f'{name}->执行结束')
+            log.info(f'{name}->执行结束')
 
         return inner
 

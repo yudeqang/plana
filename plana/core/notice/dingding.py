@@ -27,7 +27,7 @@ class DingDingNotice(Notice):
         data = {
             "msgtype": 'text',
             "text": {
-                "content": msg + 'sx'
+                "content": msg
             }
         }
         json_data = json.dumps(data).encode(encoding='utf-8')
