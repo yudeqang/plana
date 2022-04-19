@@ -62,8 +62,33 @@ def test():
 ![](./static/emailnotice.jpg)
 
 ## 配置文件
-可选的配置：
+可以在项目下新建settings.py 来更改配置。
 ```python
+import os
+
+# 配置日志
+LOG_NAME = os.path.basename(os.getcwd())
+LOG_PATH = "log/%s.log" % LOG_NAME  # log存储路径
+LOG_LEVEL = "DEBUG"
+LOG_COLOR = True  # 是否带有颜色
+LOG_IS_WRITE_TO_CONSOLE = True  # 是否打印到控制台
+LOG_IS_WRITE_TO_FILE = False  # 日志是否写入到文件，生产环境部署时建议开启
+LOG_MODE = "w"  # 写文件的模式 w or a
+LOG_MAX_BYTES = 10 * 1024 * 1024  # 每个日志文件的最大字节数
+LOG_BACKUP_COUNT = 20  # 日志文件保留数量
+LOG_ENCODING = "utf8"  # 日志文件编码
+# 是否详细的打印异常
+PRINT_EXCEPTION_DETAILS = True
+# 设置不带颜色的日志格式
+LOG_FORMAT = "%(threadName)s|%(asctime)s|%(filename)s|%(funcName)s|line:%(lineno)d|%(levelname)s| %(message)s"
+# 设置带有颜色的日志格式
+os.environ["LOGURU_FORMAT"] = (
+  "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | "
+  "<level>{level: <8}</level> | "
+  "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>line:{line}</cyan> | <level>{message}</level>"
+)
+OTHERS_LOG_LEVAL = "ERROR"  # 第三方库的log等级
+
 # Mongo连接，如果数据job和task需要存在mongo中请提供这个选项
 # mongodb://root:123456@127.0.0.1:27017
 MONGO_URI = ''

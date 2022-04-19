@@ -12,3 +12,7 @@ class NotTokenException(Exception):
 
 class NoticeException(Exception):
     pass
+
+
+class DuplicateJobId(Exception):
+    pass

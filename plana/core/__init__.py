@@ -17,6 +17,7 @@ from ..settings import SCHEDULER_CLS, JOB_BACKEND_DB, TASK_BACKEND_DB
 from .task import Task
 from .backend import MongoJobBackend, MongoTaskBackend, MemoryTaskBackend, MemoryJobBackend
 from .notice.base import Notice
+from .utils import hashify_str
 
 if SCHEDULER_CLS == 'block':
     SCHEDULER_CLS = SxBlockingScheduler
@@ -81,7 +82,7 @@ def add_job(trigger, name=None, notice: Optional[Notice] = None):
             name = func.__name__
 
         @functools.wraps(func)
-        @scheduler.scheduled_job(trigger, name=name)
+        @scheduler.scheduled_job(trigger, name=name, id=hashify_str(name))
         def inner(*args, **kwargs):
             job = scheduler.find_job(name)
             task = Task(job, scheduler.task_backend)
@@ -90,6 +91,7 @@ def add_job(trigger, name=None, notice: Optional[Notice] = None):
             try:
                 func(*args, **kwargs)
             except NoticeException as e:
+                # todo 钉钉提醒可以被@
                 notice.notice(str(e))
                 task.set_exception(e)
             except Exception as e:

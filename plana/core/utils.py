@@ -5,6 +5,7 @@
 @describe: 
 """
 import datetime
+import hashlib
 
 import pytz
 
@@ -15,3 +16,9 @@ def now() -> datetime.datetime:
 
 def str_now() -> str:
     return now().strftime('%Y-%m-%d %H:%M:%S')
+
+
+def hashify_str(s: str) -> str:
+    sha = hashlib.sha1()
+    sha.update(s.encode())
+    return sha.hexdigest()

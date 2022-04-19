@@ -4,7 +4,10 @@
 @time: 2022/04/18
 @describe: 
 """
-from plana.core import Job, SxBlockingScheduler, Task
+from apscheduler.triggers.cron import CronTrigger
+
+from plana.core import Job, SxBlockingScheduler, Task, add_job
+from plana.core.Exceptions import DuplicateJobId
 from plana.core.backend import MemoryJobBackend, MemoryTaskBackend, MongoTaskBackend, MongoJobBackend
 
 
@@ -59,3 +62,17 @@ def test_singletons():
     s = SxBlockingScheduler(m, t)
     s1 = SxBlockingScheduler(m, t)
     assert s is s1
+
+
+def test_dup():
+
+    try:
+        @add_job(CronTrigger(minute='20', hour='15', second='0'), name='测试notice')
+        def test1():
+            pass
+
+        @add_job(CronTrigger(minute='20', hour='15', second='0'), name='测试notice')
+        def test1():
+            pass
+    except DuplicateJobId:
+        pass

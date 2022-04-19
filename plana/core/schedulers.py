@@ -14,6 +14,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.job import Job
 from apscheduler.util import _Undefined
 
+from .Exceptions import DuplicateJobId
 from .backend import JobBackendDb, TaskBackendDb, MemoryTaskBackend, MemoryJobBackend
 from .log import log
 
@@ -33,8 +34,17 @@ class MySchedulerBase(BaseScheduler, ABC):
         self.backend = backend
         self.task_backend = task_backend
 
+    def _ensure_job_id(self, job_id):
+        for i in self._jobs:
+            if i.id == job_id:
+                return True
+
     def register_job(self, job):
         log.debug(f'注册Job:{job.name}')
+
+        if self._ensure_job_id(job.id):
+            raise DuplicateJobId(f'函数名称重复，请重命名name: {job.name}')
+
         self._jobs.append(job)
         self.backend.register(job)
 
