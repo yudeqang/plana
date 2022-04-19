@@ -12,9 +12,9 @@ notice = EmailNotice()
 
 
 # @add_job(IntervalTrigger(seconds=10), name='测试notice', notice=notice)
-@add_job(CronTrigger(minute='20', hour='15', second='0'), name='测试notice', notice=notice)
+@add_job(CronTrigger(minute='42', hour='14', second='45'), name='测试notice', notice=notice)
 def test_notice():
-    raise NoticeException('定时任务异常提醒测试, 这是为啥呢')
+    raise Exception('定时任务异常提醒测试, 这是为啥呢')
 
 
 start()

@@ -39,7 +39,7 @@ class Task:
         return {'job_id': self.job.id, 'job_name': self.job.name,
                 'task_id': self.task_id, 'start_time': self.start_time,
                 'end_time': self.end_time, 'run_time': self.run_time,
-                'exception': self.exception}
+                'exception': str(self.exception)}
 
     def get_stats(self):
         return self.__str__()
